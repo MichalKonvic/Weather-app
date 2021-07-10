@@ -1,25 +1,23 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useRef } from 'react'
+export default function App() {
+  const [weatherData, setWeatherData] = useState({});
+  const cityNameRef = useRef();
 
-function App() {
+  function handleTownChange(e) {
+    if (e.key === "Enter") fetch(`http://localhost:3000/${cityNameRef.current.value}`)
+      .then(response => response.json())
+      .then((json) => {
+        if (json.cod !== 200) throw json;
+        setWeatherData(json)
+      })
+      .catch(error => console.log("error", error));// TODO Handle errors(popup modal or setState)
+  }
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <>
+      <div>
+        <input ref={cityNameRef} onKeyDown={handleTownChange} />
+        <p></p>
+      </div>
+    </>
+  )
 }
-
-export default App;
